@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="basicCalculator" doc:id="106831e3-0f1b-450d-910d-403f7ce77ef9" >
+		<http:listener doc:name="HTTP POST" doc:id="e2b4fb8e-9e0a-4019-bc2a-a47b43a69fa7" config-ref="HTTP_Listener_config" path="/calculator" allowedMethods="POST"/>
+		<logger level="INFO" doc:name="Log START" doc:id="3cc9636f-1dc8-412c-9196-33321d5e6faa" message='#["LOG START"]'/>
+		<ee:transform doc:name="Transform Message" doc:id="93c60aa7-e8e4-4bfe-b65f-59a75031d484" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+
+var valueA = payload.a default 0
+var valueB = payload.b default 0
+
+output application/json
+---
+{
+	SUM: valueA + valueB,
+	DIFFERENCE: valueA - valueB,
+	PRODUCT: valueA * valueB,
+	FACTOR: valueA / valueB
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Log CALCULATOR" doc:id="2cd14f69-aa31-45c9-ae88-575f17a97f37" message="#[%dw 2.0
+
+output application/json
+---
+payload]"/>
+		<logger level="INFO" doc:name="Log END" doc:id="a43123bd-82cb-423f-932f-a37b22c3a831" message='#["LOG END"]'/>
+	</flow>
+</mule>
