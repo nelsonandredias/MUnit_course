@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="munit-unit-testing-test-suite.xml" />
+	<munit:test name="sumResult400IsInvalidTestCase" doc:id="5d6952b2-f5cb-4f0c-b8e2-892115559a29" description="Test" expectedErrorType="SUM:INVALID_RESULT">
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock when - numberA is 200" doc:id="4e683923-85bb-4a95-8d4a-cbd3b15251eb" processor="set-variable">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="numberA" attributeName="variableName" />
+					<munit-tools:with-attribute whereValue="numberA" attributeName="variableName" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="numberA" value="#[200]" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock when - numberB is 200" doc:id="81531d1d-c24a-4924-be21-d53e2db73902" processor="set-variable">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="numberB" attributeName="variableName" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="numberB" value="#[200]" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to randomSum" doc:id="b324985f-e67a-49bf-878c-afecc6e034c3" name="randomSum"/>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that doc:name="Assert that - vars.sumResult is &gt; 200" doc:id="d3342e15-d16b-4e9c-9ec0-2f12a2d3f4ca" expression="#[vars.sumResult]" is="#[MunitTools::both(MunitTools::greaterThanOrEqualTo(0),MunitTools::lessThanOrEqualTo(200))]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="sumResultZeroIsValidTestCase" doc:id="12a4837e-f441-47ae-ad95-0b81e6fb2c43" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when - numberA is 0" doc:id="4b8e5e47-f325-468b-952f-b5901c4c4868" processor="set-variable">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="numberA" attributeName="variableName" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="numberA" value="#[0]" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock when - numberB is 0" doc:id="8cb9818b-d47b-4d87-a71a-714bf7e030e0" processor="set-variable">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="numberB" attributeName="variableName" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="numberB" value="#[0]" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to randomSum" doc:id="b41bbb6a-dd96-4825-acfc-04af462c896e" name="randomSum"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that - vars.sumResult is Valid" doc:id="cff20928-251a-45d6-93f8-8e0d9dd3a04c" is="#[MunitTools::both(MunitTools::greaterThanOrEqualTo(0),MunitTools::lessThanOrEqualTo(200))]" expression="#[vars.sumResult]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="sumResult100IsValidTestCase" doc:id="700c323c-c8e2-4635-a123-db836010f20e">
+			<munit:behavior>
+				<munit-tools:mock-when doc:name="Mock when - numberA is 100" doc:id="f97508e5-be24-4744-9007-2a5e51689054" processor="set-variable">
+					<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="numberA" attributeName="variableName" />
+					<munit-tools:with-attribute whereValue="numberA" attributeName="variableName" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="numberA" value="#[100]" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+				</munit-tools:mock-when>
+				<munit-tools:mock-when doc:name="Mock when - numberB is 100" doc:id="f1d23b72-d6c4-45a8-b7d0-bc787a199d8c" processor="set-variable">
+					<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="numberB" attributeName="variableName" />
+					<munit-tools:with-attribute whereValue="numberB" attributeName="variableName" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:variables >
+						<munit-tools:variable key="numberB" value="#[100]" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+				</munit-tools:mock-when>
+			</munit:behavior>
+			<munit:execution>
+				<flow-ref doc:name="Flow-ref to randomSum" doc:id="126295f1-1e73-4e6e-9521-5707a56c135a" name="randomSum" />
+			</munit:execution>
+			<munit:validation>
+				<munit-tools:assert-that doc:name="Assert that - vars.sumResult is Valid" doc:id="fe8612b8-b5a9-4e08-8fcb-07c78767da95" expression="#[vars.sumResult]" is="#[MunitTools::both(MunitTools::greaterThanOrEqualTo(0),MunitTools::lessThanOrEqualTo(200))]" />
+			</munit:validation>
+		</munit:test>
+	<munit:test name="numberBIsValidTestCase" doc:id="0792f4d5-49da-4009-b3dd-ecd467ff22c4">
+		<munit:execution>
+			<flow-ref doc:name="Flow Reference - getRandomNumberB" doc:id="2969c71f-584b-4dd1-984a-e1d4d229467f" name="getRandomNumberB" />
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that doc:name="Assert that - vars.numberB is between 0 and 100" doc:id="4329af1d-6fd1-4e74-8e0a-452dfc8f03b0" is="#[MunitTools::both(MunitTools::greaterThanOrEqualTo(0),MunitTools::lessThanOrEqualTo(100))]" expression="#[vars.numberB]" />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="numberAIsValidTestCase" doc:id="70440135-1104-4115-94ad-8e84aa6ff0f1">
+		<munit:execution>
+			<flow-ref doc:name="Flow Reference - getRandomNumberA" doc:id="15e8a4a0-6e47-44c4-b101-37e83adfa4e3" name="getRandomNumberA" />
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that doc:name="Assert that - vars.numberA is between 0 and 100" doc:id="98effe9a-acab-4f8a-bec3-fe061d58491b" is="#[MunitTools::both(MunitTools::greaterThanOrEqualTo(0),MunitTools::lessThanOrEqualTo(100))]" expression="#[vars.numberA]" />
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

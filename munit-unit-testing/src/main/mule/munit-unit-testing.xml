@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<sub-flow name="getRandomNumberA" doc:id="88bae863-ffc0-4ff6-9d68-f1d92da7330f" >
+		<set-variable value="#[randomInt(100)]" doc:name="Set Variable - numberA up until 100" doc:id="3d5504e1-b7cd-49fc-9695-60d873436657" variableName="numberA"/>
+		<logger level="INFO" doc:name="Log numberA" doc:id="776dac57-2e07-4104-a9c3-db0ca0051b38" message='#[%dw 2.0
+
+output application/json
+---
+{
+	"numberA": vars.numberA
+}]'/>
+	</sub-flow>
+	<sub-flow name="getRandomNumberB" doc:id="10030332-b6d5-4c9d-b932-8d5d4b59473a" >
+		<set-variable value="#[randomInt(100)]" doc:name="Set Variable - numberB up until 100" doc:id="f7f7e70b-b7c2-4b60-a351-f74ebae9feb3" variableName="numberB"/>
+		<logger level="INFO" doc:name="Log numberB" doc:id="a3112756-9fb9-4528-a4e0-8b2063221dd9" message='#[%dw 2.0
+
+output application/json
+---
+{
+	"numberB": vars.numberB
+}]' />
+	</sub-flow>
+	<flow name="randomSum" doc:id="2543e991-7092-4810-b027-f8eb6bbbf6f7" >
+		<http:listener doc:name="HTTP GET" doc:id="b5e2568a-de77-4424-8ec3-dfe071615819" config-ref="HTTP_Listener_config" path="/sum" allowedMethods="GET"/>
+		<logger level="INFO" doc:name="Log START" doc:id="36b7eac0-9f5b-40b2-87b3-622c06f3b766" message='#["LOG START"]'/>
+		<flow-ref doc:name="Flow Reference - getRandomNumberA" doc:id="e5f67284-b829-4ed7-8b50-dea58c335618" name="getRandomNumberA" />
+		<flow-ref doc:name="Flow Reference - getRandomNumberB" doc:id="5966329a-a695-4887-8570-f7256f71e9aa" name="getRandomNumberB" />
+		<set-variable value="#[vars.numberA + vars.numberB]" doc:name="Set Variable - sumResult" doc:id="e014702d-ef5c-4491-bd67-7e822bfdddb3" variableName="sumResult"/>
+		<choice doc:name="Choice" doc:id="2d4ff7a2-8d68-4770-bcfc-b2fdb66a91df" >
+			<when expression="#[vars.sumResult &gt;= 0 and vars.sumResult &lt;=200]">
+				<set-payload value='#[%dw 2.0
+
+
+output application/json
+---
+{
+	"sum": vars.numberA + vars.numberB
+}]' doc:name="Set Payload" doc:id="9128a211-7ddc-42fd-ae39-722a55fadb23" />
+			</when>
+			<otherwise >
+				<raise-error doc:name="Raise error" doc:id="eb52942a-a8b6-4b19-81f4-5a81ced4c6f3" type="SUM:INVALID_RESULT" description='"The result is not between 0 and 200"'/>
+			</otherwise>
+		</choice>
+		<logger level="INFO" doc:name="Log END" doc:id="aeb798b4-85d9-45f6-b675-b14975a63222" message='#["LOG END"]'/>
+	</flow>
+</mule>
