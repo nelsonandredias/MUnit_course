@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="4.munit-assert-test-suite.xml" />
+	<munit:test name="payloadExpectedSuccessTestCase" doc:id="10600751-e011-440a-9f9c-55625e43e567" description="Test">
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to getString" doc:id="3a00fa2d-fe09-4ad9-bc94-9f09b188963c" name="getString"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals - Payload Expected" doc:id="5bb6be20-d4d2-47a8-a4a6-42d4d0453470" actual="#[payload]" expected='#["Mulesoft"]' message='#["The response payload is incorrect"]'/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="payloadNotNullSuccessTestCase" doc:id="c8c1a325-df71-4679-97d8-3462e382756d" >
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to getString" doc:id="646d54f9-319b-4443-ac60-461fe4227d55" name="getString"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-that doc:name="Assert that - Payload not null" doc:id="ad854b5d-9680-49f4-ab01-68199643d19c" expression="#[%dw 2.0
+
+
+output application/json
+---
+payload]" is="#[MunitTools::notNullValue()]" message='#["The response payload is null"]'/>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>
