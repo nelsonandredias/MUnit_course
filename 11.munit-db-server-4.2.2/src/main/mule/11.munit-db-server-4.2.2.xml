@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+	<flow name="getEmployeesJobTitle" doc:id="5deb1264-0178-4ebf-bb80-be3c5af9234b" >
+		<http:listener doc:name="HTTP GET" doc:id="93c2c11c-8bcc-4f03-a60d-b2b584111212" config-ref="HTTP_Listener_config" path="/employees/{jobID}" allowedMethods="GET"/>
+		<logger level="INFO" doc:name="Log START" doc:id="71c9ed8d-3156-4bb4-bab5-7902242e8846" message='#["LOG START"]'/>
+		<set-variable value="#[attributes.uriParams.jobID]" doc:name="Set Variable - jobId" doc:id="51ab6abe-dcb7-4d77-8e09-ad126e316105" variableName="jobId"/>
+		<db:select doc:name="Select Employees" doc:id="f017621a-9b98-4727-8b0c-9f5bbb667d82" config-ref="${DB_CONFIG}">
+			<db:sql ><![CDATA[SELECT * FROM employees WHERE JobID = :jobID;]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+	"jobID": vars.jobId
+}]]]></db:input-parameters>
+		</db:select>
+		<choice doc:name="Choice" doc:id="e5ebf7de-09fb-4fa3-bd1f-cda9836c6c46" >
+			<when expression="#[sizeOf(payload)&gt;0]">
+				<set-payload value="#[%dw 2.0
+
+
+output application/json
+---
+payload[0].JobTitle]" doc:name="Set Payload - Job Title" doc:id="49e19734-c8c7-49ec-b6ce-4864526c56b4" />
+			</when>
+			<otherwise >
+				<set-payload value='#["No job title was found"]' doc:name="Set Payload - No Job Found" doc:id="2793c418-787b-4731-b65b-0e32acbf1dc5" />
+			</otherwise>
+		</choice>
+		<logger level="INFO" doc:name="Log Payload" doc:id="a16e11dc-c5a0-4a3a-90b0-d7ae5ad886ed" message="#[%dw 2.0
+
+
+output application/json
+---
+payload]"/>
+		<logger level="INFO" doc:name="Log END" doc:id="c025e64f-77d1-4657-aeca-7de2afbf5f6d" message='#["LOG END"]'/>
+	</flow>
+</mule>
